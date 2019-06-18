@@ -1,0 +1,10 @@
+[package]
+name = "gameboy-rom"
+version = "0.0.0"
+authors = ["Mark McCaskey <maoeurk@gmail.com>"]
+edition = "2018"
+description = "Gameboy ROM parser"
+license = "Apache"
+
+[dependencies]
+nom = "5.0.0-beta2"
