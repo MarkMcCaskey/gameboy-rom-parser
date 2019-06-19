@@ -1,6 +1,7 @@
 # GameBoy ROM parser
 
 [![Build Status](https://travis-ci.org/MarkMcCaskey/gameboy-rom-parser.svg?branch=master)](https://travis-ci.org/MarkMcCaskey/gameboy-rom-parser)
+[![Crates.io Version](https://img.shields.io/crates/v/gameboy-rom.svg)](https://crates.io/crates/gameboy-rom)
 
 A very simple parser to get data out of GB ROMs and perform basic validation.
 
