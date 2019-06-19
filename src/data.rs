@@ -1,7 +1,10 @@
 //! Data types that the parser can produce
 //! If you want to do things with a GameBoy ROM, use the types defined here
 
+use serde::{Deserialize, Serialize};
+
 /// The ROM type as a convenient enum
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RomType {
     RomOnly,
     Mbc1,
@@ -67,15 +70,17 @@ impl From<u8> for RomType {
 }
 
 /// Metadata about the ROM
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RomHeader<'a> {
+    pub begin_code_execution_point: &'a [u8],
     /// Logo at the start, should match Nintendo Logo
     pub scrolling_graphic: &'a [u8],
     /// up to 10 ASCII characters
     pub game_title: &'a str,
     /// gbc bit
     pub gameboy_color: bool,
-    /// 2 ASCII hex digits in
-    pub licensee_code_new: u8,
+    /// 2 ASCII hex digits or zeros
+    pub licensee_code_new: [u8; 2],
     /// sgb bit
     pub super_gameboy: bool,
     /// how the data after the header will be parsed
@@ -91,6 +96,7 @@ pub struct RomHeader<'a> {
     pub licensee_code: u8,
     pub mask_rom_version: u8,
     pub complement: u8,
+    /// the sum of all bytes in the ROM except these two bytes, truncated to 2 bytes
     pub checksum: u16,
 }
 
