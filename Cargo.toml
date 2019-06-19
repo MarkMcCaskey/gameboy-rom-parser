@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Mark McCaskey <maoeurk@gmail.com>"]
 edition = "2018"
 description = "Gameboy ROM parser"
-license = "Apache"
+license = "Apache-2.0"
 repository = "https://github.com/MarkMcCaskey/gameboy-rom-parser"
 
 [dependencies]
