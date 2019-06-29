@@ -7,7 +7,7 @@ description = "Gameboy ROM parser"
 license = "Apache-2.0"
 repository = "https://github.com/MarkMcCaskey/gameboy-rom-parser"
 readme = "README.md"
-keywords = ["gameboy", "rom", "parser", "gb", "gbc", "sgb"]
+keywords = ["gameboy", "rom", "parser", "gb", "gbc"]
 categories = ["emulators", "encoding"]
 
 [badges]
