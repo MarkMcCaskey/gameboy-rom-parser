@@ -24,8 +24,8 @@ pub fn translate_rom_size(input: u8) -> Option<u16> {
 /// and the size of each RAM bank in bytes
 /// Standard values for RAM bank size are 2kB and 8kB
 pub fn translate_ram_size(input: u8) -> Option<(u8, u16)> {
-    const TWO_KB: u16 = 2 << 11;
-    const EIGHT_KB: u16 = 2 << 13;
+    const TWO_KB: u16 = 2 << 10;
+    const EIGHT_KB: u16 = 2 << 12;
     match input {
         0 => Some((0, 0)),
         1 => Some((1, TWO_KB)),
