@@ -16,6 +16,15 @@ fn main() {
     match gameboy_rom::parse_rom(&bytes[..]) {
         Ok((rh, _)) => {
             println!("{}", serde_json::to_string_pretty(&rh).unwrap());
+            let validation_result = rh.validate();
+            println!(
+                "ROM passes validation check? {}",
+                if let Err(err) = rh.validate() {
+                    format!("NO: {:?}", err)
+                } else {
+                    "YES".to_string()
+                }
+            );
         }
         Err(e) => {
             eprintln!("Failed to parse ROM: {:?}", e);

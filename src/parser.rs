@@ -21,7 +21,7 @@ pub fn parse_scrolling_graphic<'a>(
 pub fn parse_game_title<'a>(input: &'a [u8]) -> IResult<&'a [u8], &'a str, VerboseError<&'a [u8]>> {
     context(
         "game title as ASCII",
-        map_res(take(10usize), std::str::from_utf8),
+        map_res(take(0xFusize), std::str::from_utf8),
     )(input)
 }
 
@@ -54,12 +54,18 @@ pub fn parse_sgb_byte<'a>(input: &'a [u8]) -> IResult<&'a [u8], bool, VerboseErr
     Ok((i, byte[0] == 0x03))
 }
 
-pub fn parse_rom_size<'a>(input: &'a [u8]) -> IResult<&'a [u8], u8, VerboseError<&'a [u8]>> {
-    map_opt(take(1usize), |bytes: &'a [u8]| translate_rom_size(bytes[0]))(input)
+pub fn parse_rom_size<'a>(input: &'a [u8]) -> IResult<&'a [u8], u16, VerboseError<&'a [u8]>> {
+    context(
+        "ROM size byte",
+        map_opt(take(1usize), |bytes: &'a [u8]| translate_rom_size(bytes[0])),
+    )(input)
 }
 
 pub fn parse_ram_size<'a>(input: &'a [u8]) -> IResult<&'a [u8], (u8, u16), VerboseError<&'a [u8]>> {
-    map_opt(take(1usize), |bytes: &'a [u8]| translate_ram_size(bytes[0]))(input)
+    context(
+        "RAM size byte",
+        map_opt(take(1usize), |bytes: &'a [u8]| translate_ram_size(bytes[0])),
+    )(input)
 }
 
 pub fn parse_jp_byte<'a>(input: &'a [u8]) -> IResult<&'a [u8], bool, VerboseError<&'a [u8]>> {
@@ -76,26 +82,23 @@ pub fn parse_rom_header<'a>(
     input: &'a [u8],
 ) -> IResult<&'a [u8], RomHeader<'a>, VerboseError<&'a [u8]>> {
     map(
-        context(
-            "ROM header",
-            tuple((
-                context("Rom start", take(0x100usize)),
-                context("begin code execution point", take(4usize)),
-                parse_scrolling_graphic,
-                parse_game_title,
-                parse_gbc_byte,
-                parse_new_licensee_code,
-                parse_sgb_byte,
-                parse_rom_type,
-                parse_rom_size,
-                parse_ram_size,
-                parse_jp_byte,
-                context("old licensee code", parse_byte),
-                context("mask rom version number", parse_byte),
-                context("complement", parse_byte),
-                context("checksum", be_u16),
-            )),
-        ),
+        tuple((
+            context("Rom start", take(0x100usize)),
+            context("begin code execution point", take(4usize)),
+            parse_scrolling_graphic,
+            parse_game_title,
+            parse_gbc_byte,
+            parse_new_licensee_code,
+            parse_sgb_byte,
+            parse_rom_type,
+            parse_rom_size,
+            parse_ram_size,
+            parse_jp_byte,
+            context("old licensee code", parse_byte),
+            context("mask rom version number", parse_byte),
+            context("complement", parse_byte),
+            context("checksum", be_u16),
+        )),
         |(
             _,
             begin_code_execution_point,

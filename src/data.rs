@@ -86,7 +86,7 @@ pub struct RomHeader<'a> {
     /// how the data after the header will be parsed
     pub rom_type: RomType,
     /// How many 16KB ROM banks to use
-    pub rom_size: u8,
+    pub rom_size: u16,
     /// How many RAM banks are available on the cart
     pub ram_banks: u8,
     /// The size of the RAM bank in bytes (normal values are 2kB and 8kB)
