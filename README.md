@@ -13,6 +13,6 @@ It's a design goal to make validation generally optional.
 cargo run --bin gb2json --features="serde_json" -- /path/to/rom/data
 ```
 
-To see it in use see: see [rusty-boy] (TODO: actually refactor the ROM handling and link to the correct file)
+And [here](https://github.com/MarkMcCaskey/rusty-boy/blob/master/src/cpu/cartridge/mod.rs)'s it in use in a real emulator ([rusty-boy]). 
 
 [rusty-boy]: https://github.com/markmccaskey/rusty-boy
