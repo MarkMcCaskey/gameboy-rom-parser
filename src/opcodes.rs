@@ -1,9 +1,9 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Register8 {
     A, B, C, D, E, H, L, DerefHL,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Register16 {
     BC,
     DE,
@@ -11,7 +11,7 @@ pub enum Register16 {
     SP,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Flag {
     C,
     Z,
@@ -19,7 +19,7 @@ pub enum Flag {
     NZ,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Opcode {
     Nop,
     Stop,
