@@ -11,6 +11,7 @@
 pub mod data;
 pub mod parser;
 pub mod util;
+mod opcodes;
 
 pub use data::*;
 
