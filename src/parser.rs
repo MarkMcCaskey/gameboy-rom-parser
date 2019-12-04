@@ -8,7 +8,7 @@ use nom::{
     bytes::complete::take,
     combinator::*,
     error::{context, VerboseError},
-    number::complete::be_u16,
+    number::complete::{be_u16, le_u16},
     sequence::tuple,
     IResult,
 };
@@ -136,6 +136,56 @@ pub fn parse_rom_header<'a>(
             }
         },
     )(input)
+}
+
+pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[u8]>> {
+    let (i, byte) = take(1usize)(input)?;
+    if byte[0] == 0xCB {
+        return parse_cb(i);
+    }
+    Ok(
+    match byte[0] {
+        0x00 => (i, Opcode::Nop),
+        0x10 => (i, Opcode::Stop),
+        0x20 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::Jr(Some(Flag::NZ), bytes[0]))
+        },
+        0x30 => (i, Opcode::Stop),
+        0x01 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreImm16(Register16::BC, short))
+        }
+        0x11 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreImm16(Register16::DE, short))
+        }
+        0x21 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreImm16(Register16::HL, short))
+        }
+        0x31 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreImm16(Register16::SP, short))
+        }
+        0x02 => (i, Opcode::StoreATo16(Register16::BC)),
+        0x12 => (i, Opcode::StoreATo16(Register16::DE)),
+        0x22 => (i, Opcode::StoreAToHl(true)),
+        0x32 => (i, Opcode::StoreAToHl(false)),
+        0x03 => (i, Opcode::Inc16(Register16::BC)),
+        0x13 => (i, Opcode::Inc16(Register16::DE)),
+        0x23 => (i, Opcode::Inc16(Register16::HL)),
+        0x33 => (i, Opcode::Inc16(Register16::SP)),
+        0x04 => (i, Opcode::Inc8(Register8::B)),
+        0x14 => (i, Opcode::Inc8(Register8::D)),
+        0x24 => (i, Opcode::Inc8(Register8::H)),
+        0x34 => (i, Opcode::Inc8(Register8::DerefHL)),
+        0x05 => (i, Opcode::Dec8(Register8::B)),
+        0x15 => (i, Opcode::Dec8(Register8::D)),
+        0x25 => (i, Opcode::Dec8(Register8::H)),
+        0x35 => (i, Opcode::Dec8(Register8::DerefHL)),
+        _ => unimplemented!("TODO"),
+    })
 }
 
 /// Extra math functions
