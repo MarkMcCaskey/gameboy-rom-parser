@@ -184,6 +184,38 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x15 => (i, Opcode::Dec8(Register8::D)),
         0x25 => (i, Opcode::Dec8(Register8::H)),
         0x35 => (i, Opcode::Dec8(Register8::DerefHL)),
+
+        // the entire 40..7F block 
+        0x76 => (i, Opcode::Halt), // (0x76 case must come before the 0x40..=0x7F case)
+        0x40 ..= 0x7F => {
+            let l8 = byte[0];
+            let h8 = byte[0] / 16;
+            let op1 = match l8 {
+                0x0..=0x7 if h8 == 0x4 => Register8::B,
+                0x8..=0xF if h8 == 0x4 => Register8::C,
+                0x0..=0x7 if h8 == 0x5 => Register8::D,
+                0x8..=0xF if h8 == 0x5 => Register8::E,
+                0x0..=0x7 if h8 == 0x6 => Register8::H,
+                0x8..=0xF if h8 == 0x6 => Register8::L,
+                0x0..=0x7 if h8 == 0x7 => Register8::DerefHL,
+                0x8..=0xF if h8 == 0x7 => Register8::A,
+                _ => unreachable!()
+            };
+
+            let op2 = match l8 {
+                0x0 | 0x8 => Register8::B,
+                0x1 | 0x9 => Register8::C,
+                0x2 | 0xA => Register8::D,
+                0x3 | 0xB => Register8::E,
+                0x4 | 0xC => Register8::H,
+                0x5 | 0xD => Register8::L,
+                0x6 | 0xE => Register8::DerefHL,
+                0x7 | 0xF => Register8::A,
+                _ => unreachable!()
+            };
+
+            (i, Opcode::Mov8(op1, op2))
+        }
         _ => unimplemented!("TODO"),
     })
 }
