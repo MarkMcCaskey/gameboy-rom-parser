@@ -9,9 +9,9 @@
 //! Information from other places is and other places is called out in comments in the relevant files
 
 pub mod data;
+mod opcodes;
 pub mod parser;
 pub mod util;
-mod opcodes;
 
 pub use data::*;
 

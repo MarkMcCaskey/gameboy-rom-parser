@@ -1,6 +1,13 @@
 #[derive(Debug, Clone, Copy)]
 pub enum Register8 {
-    A, B, C, D, E, H, L, DerefHL,
+    A,
+    B,
+    C,
+    D,
+    E,
+    H,
+    L,
+    DerefHL,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -46,6 +53,7 @@ pub enum Opcode {
     Push(Register16),
     Pop(Register16),
     Add(Register8),
+    Adc(Register8),
     Sub(Register8),
     Sbc(Register8),
     And(Register8),
