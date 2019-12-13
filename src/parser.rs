@@ -188,11 +188,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x25 => (i, Opcode::Dec8(Register8::H)),
         0x35 => (i, Opcode::Dec8(Register8::DerefHL)),
 
-        // the entire 40..7F block 
-        0x76 => (i, Opcode::Halt), // (0x76 case must come before the 0x40..=0x7F case)
-        0x40..=0x7F => {
-            let lo4 = byte[0] & 0x0F;
-            let hi4 = byte[0] / 16;
+        0x76 => (i, Opcode::Halt),
+        0x40..=0x75 | 0x77..=0x7F => {
+            let lo4 = byte[0] & 0b0000_1111;
+            let hi4 = byte[0] >> 4;
             let operand1 = match lo4 {
                 0x0..=0x7 if hi4 == 0x4 => Register8::B,
                 0x8..=0xF if hi4 == 0x4 => Register8::C,
