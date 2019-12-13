@@ -151,7 +151,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, bytes) = take(1usize)(i)?;
             (i, Opcode::Jr(Some(Flag::NZ), bytes[0]))
         },
-        0x30 => (i, Opcode::Stop),
+        0x30 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::Jr(Some(Flag::NC), bytes[0]))
+        },
         0x01 => {
             let (i, short) = le_u16(i)?;
             (i, Opcode::StoreImm16(Register16::BC, short))
