@@ -1,6 +1,13 @@
 #[derive(Debug, Clone, Copy)]
 pub enum Register8 {
-    A, B, C, D, E, H, L, DerefHL,
+    A,
+    B,
+    C,
+    D,
+    E,
+    H,
+    L,
+    DerefHL,
 }
 
 #[derive(Debug, Clone, Copy)]
