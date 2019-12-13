@@ -184,10 +184,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x25 => (i, Opcode::Dec8(Register8::H)),
         0x35 => (i, Opcode::Dec8(Register8::DerefHL)),
         0x80..=0xC0 => {
-            let l8 = byte[0] & 0xF;
-            let h8 = byte[0] / 16;
+            let lo4 = byte[0] & 0b0000_1111;
+            let hi4 = byte[0] >> 4;
 
-            let operand = match l8 {
+            let operand = match lo4 {
                 0x0 | 0x8 => Register8::B,
                 0x1 | 0x9 => Register8::C,
                 0x2 | 0xA => Register8::D,
@@ -201,7 +201,7 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
 
             (
                 i,
-                match (h8, l8) {
+                match (hi4, lo4) {
                     (0x8, 0x0..=0x7) => Opcode::Add(operand),
                     (0x8, 0x8..=0xF) => Opcode::Adc(operand),
                     (0x9, 0x0..=0x7) => Opcode::Sub(operand),
