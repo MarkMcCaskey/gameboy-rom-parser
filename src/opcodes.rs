@@ -46,6 +46,7 @@ pub enum Opcode {
     Push(Register16),
     Pop(Register16),
     Add(Register8),
+    Adc(Register8),
     Sub(Register8),
     Sbc(Register8),
     And(Register8),
