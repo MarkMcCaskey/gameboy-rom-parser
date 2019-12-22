@@ -267,6 +267,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0xD1 => (i, Opcode::Pop(Register16::DE)),
         0xE1 => (i, Opcode::Pop(Register16::HL)),
         0xF1 => (i, Opcode::Pop(Register16::AF)),
+        0xC5 => (i, Opcode::Push(Register16::BC)),
+        0xD5 => (i, Opcode::Push(Register16::DE)),
+        0xE5 => (i, Opcode::Push(Register16::HL)),
+        0xF5 => (i, Opcode::Push(Register16::AF)),
         rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
