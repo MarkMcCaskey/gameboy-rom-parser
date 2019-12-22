@@ -359,6 +359,14 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, bytes) = take(1usize)(i)?;
             (i, Opcode::Cp8(bytes[0]))
         }
+        0xC7 => (i, Opcode::Rst(0)),
+        0xCF => (i, Opcode::Rst(1)),
+        0xD7 => (i, Opcode::Rst(2)),
+        0xDF => (i, Opcode::Rst(3)),
+        0xE7 => (i, Opcode::Rst(4)),
+        0xEF => (i, Opcode::Rst(5)),
+        0xF7 => (i, Opcode::Rst(6)),
+        0xFF => (i, Opcode::Rst(7)),
         rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
