@@ -149,11 +149,11 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x20 => {
             let (i, bytes) = take(1usize)(i)?;
             (i, Opcode::Jr(Some(Flag::NZ), bytes[0]))
-        },
+        }
         0x30 => {
             let (i, bytes) = take(1usize)(i)?;
             (i, Opcode::Jr(Some(Flag::NC), bytes[0]))
-        },
+        }
         0x01 => {
             let (i, short) = le_u16(i)?;
             (i, Opcode::StoreImm16(Register16::BC, short))
@@ -215,8 +215,8 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             };
 
             (i, Opcode::Mov8(operand1, operand2))
-        },
-        0x80..=0xC0 => {
+        }
+        0x80..=0xBF => {
             let lo4 = byte[0] & 0b0000_1111;
             let hi4 = byte[0] >> 4;
 
@@ -246,8 +246,8 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
                     _ => unreachable!(),
                 },
             )
-        },
-        _ => unimplemented!("TODO"),
+        }
+        rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
 
