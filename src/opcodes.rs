@@ -85,7 +85,7 @@ pub enum Opcode {
     Reti,
     Di,
     Ei,
-    Call(Option<Flag>),
+    Call(Option<Flag>, u16),
     /// gets the value at memory address HL and jumps to it
     JpHl,
     /// 8 possible values; TODO document this

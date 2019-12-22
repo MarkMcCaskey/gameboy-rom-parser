@@ -307,6 +307,26 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         }
         0xF3 => (i, Opcode::Di),
         0xFB => (i, Opcode::Ei),
+        0xC4 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::Call(Some(Flag::NZ), short))
+        }
+        0xD4 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::Call(Some(Flag::NC), short))
+        }
+        0xCC => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::Call(Some(Flag::Z), short))
+        }
+        0xDC => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::Call(Some(Flag::C), short))
+        }
+        0xCD => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::Call(None, short))
+        }
         rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
