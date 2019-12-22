@@ -186,6 +186,18 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x15 => (i, Opcode::Dec8(Register8::D)),
         0x25 => (i, Opcode::Dec8(Register8::H)),
         0x35 => (i, Opcode::Dec8(Register8::DerefHL)),
+        0x06 => todo!("LD B, d8"),
+        0x16 => todo!("LD D, d8"),
+        0x26 => todo!("LD H, d8"),
+        0x36 => todo!("LD (HL), d8"),
+        0x07 => (i, Opcode::Rlca),
+        0x17 => (i, Opcode::Rla),
+        0x27 => (i, Opcode::Daa),
+        0x37 => (i, Opcode::Scf),
+        0x0F => (i, Opcode::Rrca),
+        0x1F => (i, Opcode::Rra),
+        0x2F => (i, Opcode::Cpl),
+        0x3F => (i, Opcode::Ccf),
         0x76 => (i, Opcode::Halt),
         0x40..=0x75 | 0x77..=0x7F => {
             let lo4 = byte[0] & 0b0000_1111;
@@ -377,7 +389,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         }
         0xE9 => (i, Opcode::JpHl),
         0xF9 => (i, Opcode::LdSpHl),
-        rest => unimplemented!("TODO: 0x{:X}", rest),
+        0xD3 | 0xE3 | 0xE4 | 0xF4 | 0xDB | 0xDD | 0xEB | 0xEC | 0xED | 0xFC | 0xFD => {
+            unreachable!("TODO: error handling for invalid opcodes")
+        } //nom::error::make_error(i, nom::error::ErrorKind::TagBits),
+        u => todo!("Opcode has not yet been implemented: {:X}!", u),
     })
 }
 
