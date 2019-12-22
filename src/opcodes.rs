@@ -101,7 +101,10 @@ pub enum Opcode {
     StoreCA,
     /// Loads A from (C)
     LoadCA,
-
+    /// LD (a16), A
+    StoreAAtAddress(u16),
+    /// LD A, (a16)
+    LoadAFromAddress(u16),
     /// 0xCB instructions
     Rlc(Register8),
     Rrc(Register8),

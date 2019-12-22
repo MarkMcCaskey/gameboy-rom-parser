@@ -291,6 +291,20 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, short) = le_u16(i)?;
             (i, Opcode::Jp(Some(Flag::C), short))
         }
+        // LD (C), A
+        0xE2 => (i, Opcode::StoreCA),
+        // LD A, (C)
+        0xF2 => (i, Opcode::LoadCA),
+        // LD (a16), A
+        0xEA => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreAAtAddress(short))
+        }
+        // LD A, (a16)
+        0xFA => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::LoadAFromAddress(short))
+        }
         rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
