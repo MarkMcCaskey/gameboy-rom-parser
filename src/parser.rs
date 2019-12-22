@@ -305,6 +305,8 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, short) = le_u16(i)?;
             (i, Opcode::LoadAFromAddress(short))
         }
+        0xF3 => (i, Opcode::Di),
+        0xFB => (i, Opcode::Ei),
         rest => unimplemented!("TODO: 0x{:X}", rest),
     })
 }
