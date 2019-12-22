@@ -62,6 +62,7 @@ pub enum Opcode {
     Or(Register8),
     Cp(Register8),
     Add8(u8),
+    Adc8(u8),
     Sub8(u8),
     Sbc8(u8),
     And8(u8),
