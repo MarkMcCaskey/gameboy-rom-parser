@@ -15,6 +15,7 @@ pub enum Register16 {
     BC,
     DE,
     HL,
+    AF,
     SP,
 }
 
