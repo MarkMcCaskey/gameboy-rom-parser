@@ -91,7 +91,7 @@ pub enum Opcode {
     JpHl,
     /// 8 possible values; TODO document this
     Rst(u8),
-    /// HL = SP + 8
+    /// HL = SP + u8
     LdHlSp8(u8),
     LdSpHl,
     /// stores A in (u8)
