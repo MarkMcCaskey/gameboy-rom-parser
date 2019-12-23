@@ -206,10 +206,38 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x1D => (i, Opcode::Dec8(Register8::E)),
         0x2D => (i, Opcode::Dec8(Register8::L)),
         0x3D => (i, Opcode::Dec8(Register8::A)),
-        0x06 => todo!("LD B, d8"),
-        0x16 => todo!("LD D, d8"),
-        0x26 => todo!("LD H, d8"),
-        0x36 => todo!("LD (HL), d8"),
+        0x06 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::B, bytes[0]))
+        }
+        0x16 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::D, bytes[0]))
+        }
+        0x26 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::H, bytes[0]))
+        }
+        0x36 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::DerefHL, bytes[0]))
+        }
+        0x0E => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::C, bytes[0]))
+        }
+        0x1E => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::E, bytes[0]))
+        }
+        0x2E => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::L, bytes[0]))
+        }
+        0x3E => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::StoreImm8(Register8::A, bytes[0]))
+        }
         0x07 => (i, Opcode::Rlca),
         0x17 => (i, Opcode::Rla),
         0x27 => (i, Opcode::Daa),
@@ -295,6 +323,7 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
                 },
             )
         }
+        0xCB => parse_cb(i)?,
         0xC0 => (i, Opcode::Ret(Some(Flag::NZ))),
         0xD0 => (i, Opcode::Ret(Some(Flag::NC))),
         0xC8 => (i, Opcode::Ret(Some(Flag::Z))),
