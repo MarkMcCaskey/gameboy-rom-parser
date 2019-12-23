@@ -1,6 +1,6 @@
 //! The logic to transform bytes into GameBoy ROM data types
 
-use crate::data::*;
+use crate::header::*;
 use crate::opcodes::*;
 use crate::util::*;
 
@@ -136,18 +136,6 @@ pub fn parse_rom_header<'a>(
             }
         },
     )(input)
-}
-
-
-pub fn parse_instructions_inner(
-    input: &[u8],
-) -> ParserIterator<
-    &[u8],
-    VerboseError<&[u8]>,
-    impl for<'a> Fn(&'a [u8]) -> IResult<&'a [u8], Opcode, VerboseError<&'a [u8]>>,
-    >
-{
-    iterator(input, parse_instruction)
 }
 
 pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[u8]>> {

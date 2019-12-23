@@ -6,7 +6,7 @@
 //! This program is for API demonstration purposes only.
 use std::io::Read;
 
-use gameboy_rom::{GameBoyRom, opcodes::Opcode};
+use gameboy_rom::{opcodes::Opcode, GameBoyRom};
 use std::collections::*;
 
 fn main() {
@@ -37,7 +37,7 @@ fn main() {
     while let Some(loc) = to_inspect.pop_front() {
         for o in gbr.get_instructions_at(loc) {
             match o {
-                Opcode::Call(_, address) | Opcode::Jp(_, address) =>  {
+                Opcode::Call(_, address) | Opcode::Jp(_, address) => {
                     let adj_adr = address as usize;
                     if !seen_locations.contains(&adj_adr) {
                         seen_locations.insert(address as _);
@@ -51,12 +51,19 @@ fn main() {
         }
     }
 
-    let mut vec = seen_instructions.into_iter().collect::<Vec<(Opcode, usize)>>();
+    let mut vec = seen_instructions
+        .into_iter()
+        .collect::<Vec<(Opcode, usize)>>();
     vec.sort_by(|(_, a), (_, b)| b.cmp(&a));
 
     println!("The top 10 most common instructions were:");
     for i in 0..10 {
-        println!("{:>2}. {:?} appearing {} times", (i + 1), vec[i].0, vec[i].1);
+        println!(
+            "{:>2}. {:?} appearing {} times",
+            (i + 1),
+            vec[i].0,
+            vec[i].1
+        );
     }
 
     println!("");

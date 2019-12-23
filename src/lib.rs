@@ -14,23 +14,23 @@
 //! [GB CPU Manual]: http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 //! [opcode table]: https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 
-pub mod data;
+pub mod header;
 pub mod opcodes;
-pub mod parser;
+mod parser;
 pub mod util;
 
-pub use data::*;
+pub use crate::header::*;
+pub use crate::opcodes::*;
 
-use opcodes::Opcode;
-
+/// Top level type for dealing with GameBoy ROMs.
 #[derive(Debug)]
-pub struct GameBoyRom<'a> {
-    rom_data: &'a [u8],
+pub struct GameBoyRom<'rom> {
+    rom_data: &'rom [u8],
 }
 
-impl<'a> GameBoyRom<'a> {
+impl<'rom> GameBoyRom<'rom> {
     /// Create a new instance of the `GameBoyRom`.
-    pub fn new(rom_bytes: &'a [u8]) -> Self {
+    pub fn new(rom_bytes: &'rom [u8]) -> Self {
         Self {
             rom_data: rom_bytes,
         }
@@ -43,11 +43,13 @@ impl<'a> GameBoyRom<'a> {
             .map(|(_, rh)| rh)
     }
 
-    pub fn get_instructions_at(&self, address: usize) -> impl Iterator<Item = Opcode> + Sized + 'a {
+    /// Get an iterator over the instructions starting at the given address.
+    pub fn get_instructions_at(&self, address: usize) -> OpcodeStreamer {
         OpcodeStreamer::new(self.rom_data, address)
     }
 }
 
+/// Streaming parser over GameBoy [`Opcode`]s.
 pub struct OpcodeStreamer<'rom> {
     rom_data: &'rom [u8],
     current_index: usize,
@@ -69,7 +71,8 @@ impl<'rom> Iterator for OpcodeStreamer<'rom> {
         match parser::parse_instruction(&self.rom_data[self.current_index..]) {
             Ok((i, op)) => {
                 // Compare the pointers to find out how many bytes we read
-                let offset = i.as_ptr() as usize - (&self.rom_data[self.current_index..]).as_ptr() as usize;
+                let offset =
+                    i.as_ptr() as usize - (&self.rom_data[self.current_index..]).as_ptr() as usize;
                 self.current_index += offset;
 
                 Some(op)
