@@ -184,8 +184,8 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         }
         0x02 => (i, Opcode::StoreATo16(Register16::BC)),
         0x12 => (i, Opcode::StoreATo16(Register16::DE)),
-        0x22 => (i, Opcode::StoreAToHl(true)),
-        0x32 => (i, Opcode::StoreAToHl(false)),
+        0x22 => (i, Opcode::StoreAToHlAddr(true)),
+        0x32 => (i, Opcode::StoreAToHlAddr(false)),
         0x03 => (i, Opcode::Inc16(Register16::BC)),
         0x13 => (i, Opcode::Inc16(Register16::DE)),
         0x23 => (i, Opcode::Inc16(Register16::HL)),
@@ -218,6 +218,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x19 => (i, Opcode::AddHl(Register16::DE)),
         0x29 => (i, Opcode::AddHl(Register16::HL)),
         0x39 => (i, Opcode::AddHl(Register16::SP)),
+        0x0A => (i, Opcode::LoadAFromReg16Addr(Register16::BC)),
+        0x1A => (i, Opcode::LoadAFromReg16Addr(Register16::DE)),
+        0x2A => (i, Opcode::LoadAFromHlAddr(true)),
+        0x3A => (i, Opcode::LoadAFromHlAddr(false)),
         0x76 => (i, Opcode::Halt),
         0x40..=0x75 | 0x77..=0x7F => {
             let lo4 = byte[0] & 0b0000_1111;

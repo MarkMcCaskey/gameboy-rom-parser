@@ -35,13 +35,13 @@ pub enum Opcode {
     StoreImm16(Register16, u16),
     StoreImm8(Register8, u8),
     /// Store A at (HL) and increment or decrement HL; true means inc
-    StoreAToHl(bool),
+    StoreAToHlAddr(bool),
     /// Load A from (HL) and increment or decrement HL; true means inc
-    LoadAFromHl(bool),
+    LoadAFromHlAddr(bool),
     /// Store A to the value pointed at by register 16 (must be BC or DE)
     StoreATo16(Register16),
     /// Loads A from value pointed at by register 16 (must be BC or DE)
-    LoadAFrom16(Register16),
+    LoadAFromReg16Addr(Register16),
     Mov8(Register8, Register8),
     /// Relative jump based on flag to offset
     Jr(Option<Flag>, u8),
