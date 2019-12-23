@@ -12,11 +12,11 @@ fn main() {
     let mut file = std::fs::File::open(rom_file_path).expect("gameboy rom file");
     let mut bytes = vec![];
     file.read_to_end(&mut bytes).expect("read bytes from file");
+    let gbr = gameboy_rom::GameBoyRom::new(&bytes[..]);
 
-    match gameboy_rom::parse_rom(&bytes[..]) {
-        Ok((rh, _)) => {
+    match gbr.parse_header() {
+        Ok(rh) => {
             println!("{}", serde_json::to_string_pretty(&rh).unwrap());
-            let validation_result = rh.validate();
             println!(
                 "ROM passes validation check? {}",
                 if let Err(err) = rh.validate() {

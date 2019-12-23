@@ -1,6 +1,6 @@
 use std::io::Read;
 
-use gameboy_rom::parser::parse_instruction;
+use gameboy_rom::{GameBoyRom, opcodes::Opcode};
 
 fn main() {
     let mut args = std::env::args();
@@ -15,9 +15,10 @@ fn main() {
     let mut bytes = vec![];
     file.read_to_end(&mut bytes).expect("read bytes from file");
 
-    let mut inp = &bytes[0x100..];
-    while let Ok((i, o)) = parse_instruction(inp) {
+    let gbr = GameBoyRom::new(bytes.as_slice());
+    let intro_section = gbr.get_instructions_at(0x100);
+
+    for o in intro_section {
         dbg!(o);
-        inp = i;
     }
 }

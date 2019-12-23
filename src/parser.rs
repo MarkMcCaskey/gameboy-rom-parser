@@ -138,6 +138,18 @@ pub fn parse_rom_header<'a>(
     )(input)
 }
 
+
+pub fn parse_instructions_inner(
+    input: &[u8],
+) -> ParserIterator<
+    &[u8],
+    VerboseError<&[u8]>,
+    impl for<'a> Fn(&'a [u8]) -> IResult<&'a [u8], Opcode, VerboseError<&'a [u8]>>,
+    >
+{
+    iterator(input, parse_instruction)
+}
+
 pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[u8]>> {
     let (i, byte) = take(1usize)(input)?;
     Ok(match byte[0] {
