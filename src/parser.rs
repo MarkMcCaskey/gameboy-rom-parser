@@ -154,6 +154,18 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, bytes) = take(1usize)(i)?;
             (i, Opcode::Jr(Some(Flag::NC), bytes[0]))
         }
+        0x18 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::Jr(None, bytes[0]))
+        }
+        0x28 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::Jr(Some(Flag::Z), bytes[0]))
+        }
+        0x38 => {
+            let (i, bytes) = take(1usize)(i)?;
+            (i, Opcode::Jr(Some(Flag::C), bytes[0]))
+        }
         0x01 => {
             let (i, short) = le_u16(i)?;
             (i, Opcode::StoreImm16(Register16::BC, short))
@@ -198,6 +210,11 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x1F => (i, Opcode::Rra),
         0x2F => (i, Opcode::Cpl),
         0x3F => (i, Opcode::Ccf),
+        0x08 => {
+            let (i, short) = le_u16(i)?;
+            (i, Opcode::StoreImm16Sp(short))
+        },
+
         0x76 => (i, Opcode::Halt),
         0x40..=0x75 | 0x77..=0x7F => {
             let lo4 = byte[0] & 0b0000_1111;
@@ -392,7 +409,6 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0xD3 | 0xE3 | 0xE4 | 0xF4 | 0xDB | 0xDD | 0xEB | 0xEC | 0xED | 0xFC | 0xFD => {
             unreachable!("TODO: error handling for invalid opcodes")
         } //nom::error::make_error(i, nom::error::ErrorKind::TagBits),
-        u => todo!("Opcode has not yet been implemented: {:X}!", u),
     })
 }
 

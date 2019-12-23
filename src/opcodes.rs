@@ -78,7 +78,7 @@ pub enum Opcode {
     Rla,
     Rrca,
     Rra,
-    /// Stores SP in an immedate u16
+    /// Stores SP at pointer given by immediate 16
     StoreImm16Sp(u16),
     /// Adds a value to HL
     AddHl(Register16),
