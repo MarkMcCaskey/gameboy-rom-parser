@@ -1,5 +1,4 @@
-//! Data types that the parser can produce
-//! If you want to do things with a GameBoy ROM, use the types defined here
+//! Data types related to the ROM header that the parser can produce.
 
 use serde::{Deserialize, Serialize};
 
@@ -130,6 +129,7 @@ impl<'a> RomHeader<'a> {
     }
 }
 
+/// Errors that may occur while attempting to validate a ROM header.
 #[derive(Debug, PartialEq, Eq)]
 pub enum HeaderValidationError {
     /// SGB requires the old licensee code to be 0x33
