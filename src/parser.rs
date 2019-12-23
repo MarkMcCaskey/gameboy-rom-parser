@@ -7,10 +7,10 @@ use crate::util::*;
 use nom::{
     bytes::complete::take,
     combinator::*,
-    error::{context, VerboseError},
+    error::{context, make_error, VerboseError},
     number::complete::{be_u16, le_u16},
     sequence::tuple,
-    IResult,
+    Err, IResult,
 };
 
 pub fn parse_scrolling_graphic<'a>(
@@ -140,9 +140,6 @@ pub fn parse_rom_header<'a>(
 
 pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[u8]>> {
     let (i, byte) = take(1usize)(input)?;
-    if byte[0] == 0xCB {
-        return parse_cb(i);
-    }
     Ok(match byte[0] {
         0x00 => (i, Opcode::Nop),
         0x10 => (i, Opcode::Stop),
@@ -249,7 +246,7 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0x08 => {
             let (i, short) = le_u16(i)?;
             (i, Opcode::StoreImm16Sp(short))
-        },
+        }
         0x09 => (i, Opcode::AddHl(Register16::BC)),
         0x19 => (i, Opcode::AddHl(Register16::DE)),
         0x29 => (i, Opcode::AddHl(Register16::HL)),
@@ -455,8 +452,8 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
         0xE9 => (i, Opcode::JpHl),
         0xF9 => (i, Opcode::LdSpHl),
         0xD3 | 0xE3 | 0xE4 | 0xF4 | 0xDB | 0xDD | 0xEB | 0xEC | 0xED | 0xFC | 0xFD => {
-            unreachable!("TODO: error handling for invalid opcodes")
-        } //nom::error::make_error(i, nom::error::ErrorKind::TagBits),
+            return Err(Err::Error(make_error(i, nom::error::ErrorKind::TagBits)));
+        }
     })
 }
 
