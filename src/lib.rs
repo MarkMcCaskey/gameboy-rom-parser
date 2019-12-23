@@ -1,12 +1,18 @@
-//! A parser for Gameboy ROMS. Provides high-level useful data types like `RomHeader`
-//! and `RomType`. Basic validation is provided through the `validate` method
-//! on `RomHeader`.
+//! A parser for Gameboy ROMS.
 //!
-//! NOTE: this crate does nothing with the data before or after the ROM header right now.
-//! The bytes there are not validated as valid Gameboy machine code.
+//! This crate provides a streaming Gameboy instruction parser as well as some
+//! high-level types like `RomHeader` and `RomType`.
 //!
-//! Mostly based on info from http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf .
+//! Basic validation is provided through the `validate` method on `RomHeader`.
+//!
+//! Header logic based on info from the [GB CPU Manual].
+//!
+//! Opcode parsing logic was created with this [opcode table] as a reference.
+//!
 //! Information from other places is and other places is called out in comments in the relevant files
+//!
+//! [GB CPU Manual]: http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
+//! [opcode table]: https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 
 pub mod data;
 mod opcodes;
@@ -21,12 +27,4 @@ pub fn parse_rom(rom_data: &[u8]) -> Result<(RomHeader, &[u8]), String> {
     parser::parse_rom_header(rom_data)
         .map_err(|e| format!("Failed to parse ROM: {:?}", e))
         .map(|(rest, rh)| (rh, rest))
-}
-
-#[cfg(test)]
-mod test {
-    #[test]
-    fn it_works() {
-        assert!(true);
-    }
 }
