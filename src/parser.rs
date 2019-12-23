@@ -214,7 +214,10 @@ pub fn parse_instruction(input: &[u8]) -> IResult<&[u8], Opcode, VerboseError<&[
             let (i, short) = le_u16(i)?;
             (i, Opcode::StoreImm16Sp(short))
         },
-
+        0x09 => (i, Opcode::AddHl(Register16::BC)),
+        0x19 => (i, Opcode::AddHl(Register16::DE)),
+        0x29 => (i, Opcode::AddHl(Register16::HL)),
+        0x39 => (i, Opcode::AddHl(Register16::SP)),
         0x76 => (i, Opcode::Halt),
         0x40..=0x75 | 0x77..=0x7F => {
             let lo4 = byte[0] & 0b0000_1111;
