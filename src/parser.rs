@@ -26,10 +26,16 @@ pub fn parse_game_title<'a>(input: &'a [u8]) -> IResult<&'a [u8], &'a str, Verbo
     )(input)
 }
 
-pub fn parse_gbc_byte<'a>(input: &'a [u8]) -> IResult<&'a [u8], bool, VerboseError<&'a [u8]>> {
+pub fn parse_gbc_byte<'a>(
+    input: &'a [u8],
+) -> IResult<&'a [u8], GameboyColorCompatibility, VerboseError<&'a [u8]>> {
     let (i, byte) = take(1usize)(input)?;
 
-    Ok((i, byte[0] == 0x80))
+    match byte[0] {
+        0x80 => Ok((i, GameboyColorCompatibility::ColorOptional)),
+        0xC0 => Ok((i, GameboyColorCompatibility::ColorRequired)),
+        _ => Ok((i, GameboyColorCompatibility::Monochrome)),
+    }
 }
 
 pub fn parse_rom_type<'a>(input: &'a [u8]) -> IResult<&'a [u8], RomType, VerboseError<&'a [u8]>> {

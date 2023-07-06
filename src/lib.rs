@@ -13,6 +13,16 @@
 //!
 //! [GB CPU Manual]: http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 //! [opcode table]: https://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+//!
+//! Basic usage:
+//! ```
+//! # fn example() -> Result<(), String> {
+//! # let rom_buffer = vec![0; 0x100];
+//! let rom = gameboy_rom::GameBoyRom::new(rom_buffer.as_slice());
+//! let rom_header = rom.parse_header()?;
+//! # Ok(())
+//! # }
+//! ```
 
 pub mod header;
 pub mod opcodes;

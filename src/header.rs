@@ -2,8 +2,29 @@
 
 use serde::{Deserialize, Serialize};
 
+/// The ROM's declared use of Gameboy Color features
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize, Clone, Copy)]
+pub enum GameboyColorCompatibility {
+    /// The ROM indicates that it does not make use of any Gameboy Color enhancements
+    Monochrome,
+    /// The ROM supports but does not require Gameboy Color
+    ColorOptional,
+    /// The ROM requires Gameboy Color enhancements
+    ColorRequired,
+}
+
+impl GameboyColorCompatibility {
+    /// Whether or not the ROM declares it uses GameBoy Color features
+    pub const fn supports_color(self) -> bool {
+        match self {
+            GameboyColorCompatibility::Monochrome => false,
+            _ => true,
+        }
+    }
+}
+
 /// The ROM type as a convenient enum
-#[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize, Clone, Copy)]
 pub enum RomType {
     RomOnly,
     Mbc1,
@@ -77,7 +98,7 @@ pub struct RomHeader<'a> {
     /// up to 10 ASCII characters
     pub game_title: &'a str,
     /// gbc bit
-    pub gameboy_color: bool,
+    pub gameboy_color: GameboyColorCompatibility,
     /// 2 ASCII hex digits or zeros
     pub licensee_code_new: [u8; 2],
     /// sgb bit
