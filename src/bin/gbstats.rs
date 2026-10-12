@@ -10,8 +10,8 @@ use gameboy_rom::{opcodes::Opcode, GameBoyRom};
 use std::collections::*;
 
 fn main() {
-    let mut args = std::env::args();
-    args.next().unwrap();
+    let mut args = std::env::args_os();
+    args.next();
     let rom_file_path = if let Some(arg) = args.next() {
         arg
     } else {
